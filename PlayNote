@@ -1,0 +1,56 @@
+void MainWindow::PlayNote(int note, bool down)	//음이 연주 될때
+{
+	bool save = m_midifile && saving;	//mid파일 경로 지정과 세이빙모드가 모두 on일때
+	if (save) {							
+		if (firstnote==0)				//제일 처음 치는 음 저장
+			firstnote=note;			
+		if (lastTime == (DWORD) -1)		//lastTime이 초기값일 때 현재 시간을 받아온다
+			lastTime = GetTickCount();
+		midiTrackAddRest(m_midifile, 1, GetTickCount() - lastTime, TRUE);				//트랙1의 공백시간을 mid파일에 추가하는 메시지함수
+		midiTrackAddMsg(m_midifile, 1, down ? msgNoteOn : msgNoteOff, note, m_force);	//트랙1의 눌린 음을 mid파일에 추가하는 메시지 함수
+
+		if(useHarmoni)					//현재 Harmoni가 체크되어있나
+		{
+			midiTrackAddRest(m_midifile, 2, GetTickCount() - lastTime, TRUE);			//트랙2의 공백시간을 mid파일에 추가하는 메시지 함수
+			if((firstnote-note)%12!=0)	//제일 처음 치는 음은 화음이 안들어간다.
+				Hamoni(note, down);		//화음 추가
+		}
+		lastTime = GetTickCount();		//현재시간 갱신(lastTime변수에 음 입력이 멈춤시간이 최종적으로 들어감)
+	}
+
+	if (useBeep) {						//beep체크박스가 눌렸나
+		BEEP_PARAM param = {frequency[note], (ULONG) -1};
+
+		if (down) {
+			OBJECT_ATTRIBUTES ObjectAttributes;
+			IO_STATUS_BLOCK IoStatusBlock;
+			NTSTATUS status;
+
+			if (hBeep)
+				CloseHandle(hBeep);
+			lastFrequency = param.Frequency;
+
+			if (param.Frequency < 0x25 || param.Frequency > 0x7FFF)
+				return; // Out of range
+
+			InitializeObjectAttributes(&ObjectAttributes, &usBeepDevice, 0, NULL, NULL);
+			status = F_NtCreateFile(&hBeep, FILE_READ_DATA | FILE_WRITE_DATA,
+				&ObjectAttributes, &IoStatusBlock, NULL, 0,
+				FILE_SHARE_READ | FILE_SHARE_WRITE,
+				FILE_OPEN_IF, 0, NULL, 0);
+			if (NT_SUCCESS(status)) {
+				DeviceIoControl(hBeep, IOCTL_BEEP_SET, &param, sizeof param, NULL, 0, NULL, NULL);
+			} else {
+				MessageBox(m_hwnd, TEXT("Fail to open the beep device."),
+					TEXT("Fatal Error"), MB_ICONERROR);
+			}
+		} else {
+			// Kill the current beep ONLY if no new beep has hijacked the handle
+			if (lastFrequency == param.Frequency && hBeep) {
+				CloseHandle(hBeep);
+				hBeep = NULL;
+			}
+		}
+	} else
+		MIDI_MESSAGE(m_midi, down ? 0x90 : 0x80, note, m_force);
+}
