@@ -38,7 +38,7 @@ typedef struct {
     POINTL point;
     int lastNote;
     int lastKey;
-} PianoTouchPoint;
+} PianoTouchPoint;	//키보드 눌린 위치
 
 class PianoControl : public Window {
 public:
@@ -96,17 +96,17 @@ protected:
     LPCWSTR *blackText;
     LPCWSTR *whiteText;
 
-    int octaves;
-    HFONT hFont;
+    int octaves;	//옥타브
+    HFONT hFont;	//폰트
     HWND hwParent;
 
     HDC hMemDC;
     HBITMAP hMemBitmap;
     HBRUSH hBackground;
-    int bmx, bmy;
+    int bmx, bmy;	//비트맵 좌표
 
-    bool mouseDown;
-    int lastNote, lastKey;
+    bool mouseDown;	//마우스 눌렸나
+    int lastNote, lastKey;	//마지막눌린 노트, 키
 };
 
 #endif

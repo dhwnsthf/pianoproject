@@ -33,7 +33,7 @@ void Window::Register()
 }
 
 LRESULT CALLBACK
-Window::s_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+Window::s_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)	//메시지, 핸들처리
 {
     Window *self;
     if (uMsg == WM_NCCREATE) {

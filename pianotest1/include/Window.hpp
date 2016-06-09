@@ -15,7 +15,7 @@ inline void MakeRect(RECT &rect, int x, int y, int cx, int cy)
     rect.bottom = y + cy;
 }
 
-inline void MakeRectRight(RECT &rect, int x, int y, int cx, int cy)
+inline void MakeRectRight(RECT &rect, int x, int y, int cx, int cy)	//사각형 그리기 안쓰임.
 {
     MakeRect(rect, x - cx, y, cx, cy);
 }

@@ -9,7 +9,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     UNREFERENCED_PARAMETER(lpCmdLine);
     InitCommonControls();
 
-    MainWindow *win = MainWindow::Create(L"Music Keyboard");
+    MainWindow *win = MainWindow::Create(L"Music Keyboard");	//메인윈도우 창 만들기
     if (win) {
         ShowWindow(win->GetHWND(), nCmdShow);
         MSG msg;

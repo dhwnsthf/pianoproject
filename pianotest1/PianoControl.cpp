@@ -19,7 +19,7 @@ BOOL PianoControl::WinRegisterClass(WNDCLASS *pwc)
     return Window::WinRegisterClass(pwc);
 }
 
-LRESULT PianoControl::OnCreate()
+LRESULT PianoControl::OnCreate()	//piano OnCreate
 {
     NONCLIENTMETRICS ncmMetrics = { sizeof(NONCLIENTMETRICS) };
     RECT client;
@@ -75,14 +75,14 @@ LRESULT PianoControl::OnCreate()
     return 0;
 }
 
-LRESULT PianoControl::OnDestroy()
+LRESULT PianoControl::OnDestroy()	//소멸자
 {
     if (hMemDC)
         DeleteDC(hMemDC);
     return 0;
 }
 
-void PianoControl::SetOctaves(int octaves)
+void PianoControl::SetOctaves(int octaves)	//옥타브 설정
 {
     bool *newBlackStatus, *newWhiteStatus;
     LPCWSTR *newBlackText, *newWhiteText;
@@ -104,7 +104,7 @@ void PianoControl::SetOctaves(int octaves)
     this->octaves = octaves;
 }
 
-void PianoControl::UpdateKey(int key, bool black)
+void PianoControl::UpdateKey(int key, bool black)	//키업데이트
 {
     RECT client;
     int width, height;
@@ -118,12 +118,12 @@ void PianoControl::UpdateKey(int key, bool black)
     bheight = height / 2;
     hbwidth = bwidth / 2;
 
-    if (black) {
+    if (black) {	//검은색 건반
         client.left += (key * wwidth) - hbwidth + 2;
         client.right = client.left + bwidth - 5;
         client.bottom = client.top + bheight;
         InvalidateRect(m_hwnd, &client, FALSE);
-    } else {
+    } else {		//흰색건반
         client.left += key * wwidth;
         client.right = client.left  + wwidth;
         client.bottom = client.top + height;
@@ -131,33 +131,33 @@ void PianoControl::UpdateKey(int key, bool black)
     }
 }
 
-void PianoControl::SetKeyStatus(int key, bool down)
+void PianoControl::SetKeyStatus(int key, bool down)	//키 스탯설정
 {
     bool black;
     int id = keyIDToInternal(key, black);
 
-    (black ? blackStatus : whiteStatus)[id] = down;
+    (black ? blackStatus : whiteStatus)[id] = down;	//키가 눌렸나
     UpdateKey(id, black);
 }
 
-bool PianoControl::GetKeyStatus(int key)
+bool PianoControl::GetKeyStatus(int key)	//현재 키상태
 {
     bool black;
     int id = keyIDToInternal(key, black);
 
-    return (black ? blackStatus : whiteStatus)[id];
+    return (black ? blackStatus : whiteStatus)[id];	//눌렸는지 안눌렸는지
 }
 
-void PianoControl::SetKeyText(int key, LPCWSTR text)
+void PianoControl::SetKeyText(int key, LPCWSTR text)	//키 텍스트 설정
 {
     bool black;
     int id = keyIDToInternal(key, black);
 
     (black ? blackText : whiteText)[id] = text;
-    UpdateKey(id, black);
+    UpdateKey(id, black);	//설정 후 업데이트
 }
 
-LPCWSTR PianoControl::GetKeyText(int key)
+LPCWSTR PianoControl::GetKeyText(int key)	//해당 키 텍스트 얻기
 {
     bool black;
     int id = keyIDToInternal(key, black);
@@ -165,7 +165,7 @@ LPCWSTR PianoControl::GetKeyText(int key)
     return (black ? blackText : whiteText)[id];
 }
 
-int PianoControl::keyIDToInternal(int id, bool &black) {
+int PianoControl::keyIDToInternal(int id, bool &black) {	//키값반환
     switch (id % 12) {
         case 0:
         case 2:
@@ -213,7 +213,7 @@ int PianoControl::keyIDToInternal(int id, bool &black) {
 
 static int internalToKeyIDMap[7] = {1, 3, 5, 6, 8, 10, 11};
 
-int PianoControl::internalToKeyID(int id, bool black)
+int PianoControl::internalToKeyID(int id, bool black)	//인터넬키값 반환
 {
     id = id / 7 * 12 + internalToKeyIDMap[id % 7];
     if (black)
@@ -221,7 +221,7 @@ int PianoControl::internalToKeyID(int id, bool black)
     return id;
 }
 
-bool PianoControl::haveBlackToLeft(int i) {
+bool PianoControl::haveBlackToLeft(int i) {	//조성왼쪽이동시 가능한지 체크
     switch (i % 7) {
         case 0: // G
         case 1: // A
@@ -238,7 +238,7 @@ bool PianoControl::haveBlackToLeft(int i) {
     return false; // not reached
 }
 
-bool PianoControl::haveBlackToRight(int i) {
+bool PianoControl::haveBlackToRight(int i) { //조성오른쪽이동시 가능한지 체크
     switch (i % 7) {
         case 0: // G
         case 1: // A
@@ -293,7 +293,7 @@ int PianoControl::hitTest(int x, int y, bool &black)
     return key;
 }
 
-void PianoControl::PaintContent(PAINTSTRUCT *pps)
+void PianoControl::PaintContent(PAINTSTRUCT *pps)	//색칠
 {
     RECT client, rect;
     int width, height;
@@ -393,7 +393,7 @@ void PianoControl::PaintContent(PAINTSTRUCT *pps)
         rect.top = 0, rect.bottom = bheight, rect.left = sx, rect.right = ex;
         FillRect(hdc, &rect, hBackground);
 
-        switch (haveBlack(i)) {
+        switch (haveBlack(i)) {	//건반위치 설정
             case 0: // none
                 DRAWBORDER(bheight, 0, GETBORDER0(down));
                 DRAWBORDER(bheight, 1, GETBORDER1(down));
@@ -495,7 +495,7 @@ void PianoControl::PaintContent(PAINTSTRUCT *pps)
         delete szBuffer;
 }
 
-void PianoControl::OnPaint()
+void PianoControl::OnPaint()	//건반그려주기
 {
     PAINTSTRUCT ps;
     BeginPaint(m_hwnd, &ps);
@@ -511,7 +511,7 @@ void PianoControl::OnPaint()
     if (!hMemBitmap || cx > bmx || cy > bmy) {
         if (hMemBitmap)
             if (!DeleteObject(hMemBitmap))
-                MessageBox(m_hwnd, L"FAILED TO DELETE BITMAP", NULL, 0);
+                MessageBox(m_hwnd, L"FAILED TO DELETE BITMAP", NULL, 0);	//예외처리
         bmx = cx + 50;
         bmy = cy + 50;
         hMemBitmap = CreateCompatibleBitmap(hdc, bmx, bmy);
@@ -543,7 +543,7 @@ void PianoControl::EnableDraw()
     RedrawWindow(m_hwnd, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
 }
 
-void PianoControl::OnTouchPoint(UINT id, int x, int y)
+void PianoControl::OnTouchPoint(UINT id, int x, int y)	//마우스 터치된 키보드 건반 처리
 {
     if (x != -1 && y != -1) {
         // Touch point is down
@@ -583,7 +583,7 @@ void PianoControl::OnTouchPoint(UINT id, int x, int y)
     }
 }
 
-int PianoControl::GetTouchPointID(DWORD dwID)
+int PianoControl::GetTouchPointID(DWORD dwID)	//터치 아이디 반환
 {
     for (DWORD i = 0; i < MAXPOINTS; ++i) {
         if (touchPointID[i] == dwID)
@@ -598,23 +598,23 @@ int PianoControl::GetTouchPointID(DWORD dwID)
     return -1;
 }
 
-LRESULT PianoControl::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT PianoControl::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)	//메세지 처리함수
 {
     switch (uMsg) {
-    case WM_CREATE:
+    case WM_CREATE:	//생성시
         return OnCreate();
-    case WM_DESTROY:
+    case WM_DESTROY:	//소멸시
         return OnDestroy();
     case WM_NCDESTROY:
         PostQuitMessage(0);
         break;
-    case WM_PAINT:
+    case WM_PAINT:	//페인트호출
         OnPaint();
         return 0;
-    case WM_SIZE:
+    case WM_SIZE:	//사이즈변경시 업데이트
         InvalidateRect(m_hwnd, NULL, TRUE);
         return 0;
-    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDOWN:	//왼쪽버튼 눌렸을 때
         if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH) {
             bool black;
             int internal = hitTest(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), black);
@@ -628,14 +628,14 @@ LRESULT PianoControl::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SetFocus(m_hwnd);
             return 0;
         }
-    case WM_LBUTTONUP:
+    case WM_LBUTTONUP:		//왼쪽버튼 때졌을 때
         if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH) {
             SendMessage(hwParent, MMWM_TURNNOTE, lastNote, 0);
             SetKeyStatus(lastKey, false);
             mouseDown = false;
             return 0;
         }
-    case WM_MOUSEMOVE:
+    case WM_MOUSEMOVE:		//마우스 움질일 때
         if ((GetMessageExtraInfo() & 0x82) != 0x82 && mouseDown) {
             bool black;
             int internal = hitTest(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), black);
@@ -651,7 +651,7 @@ LRESULT PianoControl::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
         }
         return 0;
-    case WM_KEYDOWN:
+    case WM_KEYDOWN:	//키보드 처리
     case WM_SYSKEYDOWN:
     case WM_KEYUP:
     case WM_SYSKEYUP:
@@ -723,7 +723,7 @@ LRESULT PianoControl::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return Window::HandleMessage(uMsg, wParam, lParam);
 }
 
-PianoControl *PianoControl::Create(LPCTSTR szTitle, HWND hwParent, DWORD dwDlgID,
+PianoControl *PianoControl::Create(LPCTSTR szTitle, HWND hwParent, DWORD dwDlgID,	//oncreate
                                    DWORD dwStyle, int x, int y, int cx, int cy)
 {
     PianoControl *self = new PianoControl();
