@@ -1,0 +1,57 @@
+switch(octave)
+	{
+	case 0: //메이저
+		if(note%12==0)	//도
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==1) //도 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==2) //레
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==3) //레 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==4) //미
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==5) //파
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==6) //파 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==7) //솔
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==8) //솔 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==9) //라
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==10) //라 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==11) //시
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		break;
+	case -1:
+		if(note%12==0)	//도
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==1) //도 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==2) //레
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-5, m_force);
+		else if(note%12==3) //레 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==4) //미
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==5) //파
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==6) //파 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==7) //솔
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==8) //솔 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==9) //라
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		else if(note%12==10) //라 샾
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-3, m_force);
+		else if(note%12==11) //시
+			midiTrackAddMsg(m_midifile, 2, down ? msgNoteOn : msgNoteOff, note-4, m_force);
+		break;
+	default:
+		break;
+	}
